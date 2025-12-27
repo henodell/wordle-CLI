@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 
 // Colored Text
 #define RESET "\x1b[0m"
@@ -26,7 +27,7 @@ void printLetter(char letter, letterState state) {
     }
 }
 
-void setup() {
+void setup(void) {
     printf("You will have 6 letters to guess the correct word.\n");
     printf("After every guess, each letter will be either green, yellow, gray.\n");
     printf("Green means correct letter and correct place.\n");
@@ -39,8 +40,19 @@ int main(void) {
 
     // printf("%i", WORD_LENGTH);
     const int WORD_LENGTH = 6;
-    const char *WORD_ANSWER = "crane";
+    const char WORD_ANSWER[] = "crane";
 
-    char *plrGuess = "";
+    char plrGuess[6];
     int guessCount = 0;
+
+    while (plrGuess != WORD_ANSWER) {
+        scanf("%-6s", plrGuess);
+        size_t guessLength = strnlen(plrGuess, 10);
+        printf("%zu\n", guessLength);
+
+        if (guessLength != 6) {
+            printf("Must be 6 letters.\n");
+            continue;
+        }
+    }
 }
