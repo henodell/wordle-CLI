@@ -20,6 +20,30 @@ void flushStdin(void) {
     while ((c = getchar()) != '\n' && c != EOF);
 }
 
+void evaluateGuess(const char answer[], const char guess[]) {
+    LetterState states[5]; // state for each letter
+    int used[5] = {0}; // false if not checked, true if checked
+
+    // mark greens
+    for (int i = 0; i < 5; i++) {
+        if (guess[i] == answer[i]) {
+            states[i] = SUCCESS;
+            used[i] = 1;
+
+        } else {
+            states[i] = INCORRECT;
+        }
+
+    // mark yellows
+    for (int i = 0, i < 5; i++) {
+        if (states[i] == SUCCESS) {
+            continue;
+        }
+
+    }
+    }
+}
+
 void printLetter(char letter, LetterState state) {
     switch (state) {
         case SUCCESS:
@@ -57,9 +81,7 @@ int main(void) {
     while (guessCount < MAX_GUESSES) {
         guessCount++;
 
-        // handle input, flush rest of stdin if long input
-        // if short input remove \n to get only char
-        // then check if string is equal to word length (short input check)
+        // constantly ask for player input until its atleast 5 chars
         do {
             if (fgets(plrGuess, sizeof(plrGuess), stdin) == NULL) {
                 printf("\nInput error or EOF.");
@@ -68,6 +90,9 @@ int main(void) {
             flushStdin();
             plrGuess[strcspn(plrGuess, "\n")] = 0;
         } while (strlen(plrGuess) != WORD_LENGTH);
+
+        evaluateGuess(WORD_ANSWER, plrGuess);
+        
 
         
     }
