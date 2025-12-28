@@ -11,9 +11,16 @@ typedef enum {
     SUCCESS,
     MISPLACED,
     INCORRECT
-} letterState;
+} LetterState;
 
-void printLetter(char letter, letterState state) {
+// Helper Functions //
+
+void flushStdin(void) {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+}
+
+void printLetter(char letter, LetterState state) {
     switch (state) {
         case SUCCESS:
             printf("%s%c%s", GREEN, letter, RESET);
@@ -38,21 +45,30 @@ void setup(void) {
 int main(void) {
     setup();
 
-    // printf("%i", WORD_LENGTH);
-    const int WORD_LENGTH = 6;
+    const int WORD_LENGTH = 5;
     const char WORD_ANSWER[] = "crane";
 
-    char plrGuess[6];
+    // buffer to hold player input
+    char plrGuess[WORD_LENGTH + 1];
+
+    const int MAX_GUESSES = 6;
     int guessCount = 0;
 
-    while (plrGuess != WORD_ANSWER) {
-        scanf("%-6s", plrGuess);
-        size_t guessLength = strnlen(plrGuess, 10);
-        printf("%zu\n", guessLength);
+    while (guessCount < MAX_GUESSES) {
+        guessCount++;
 
-        if (guessLength != 6) {
-            printf("Must be 6 letters.\n");
-            continue;
-        }
+        // handle input, flush rest of stdin if long input
+        // if short input remove \n to get only char
+        // then check if string is equal to word length (short input check)
+        do {
+            if (fgets(plrGuess, sizeof(plrGuess), stdin) == NULL) {
+                printf("\nInput error or EOF.");
+                break;
+            }
+            flushStdin();
+            plrGuess[strcspn(plrGuess, "\n")] = 0;
+        } while (strlen(plrGuess) != WORD_LENGTH);
+
+        
     }
 }
