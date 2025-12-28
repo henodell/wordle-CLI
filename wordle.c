@@ -20,6 +20,22 @@ void flushStdin(void) {
     while ((c = getchar()) != '\n' && c != EOF);
 }
 
+void printLetter(char letter, LetterState state) {
+    switch (state) {
+        case SUCCESS:
+            printf("%s%c%s", GREEN, letter, RESET);
+            break;
+        case MISPLACED:
+            printf("%s%c%s", YELLOW, letter, RESET);
+            break;
+        case INCORRECT:
+            printf("%s%c%s", GRAY, letter, RESET);
+            break;
+    }
+}
+
+// Logic
+
 void evaluateGuess(const char answer[], const char guess[]) {
     LetterState states[5]; // state for each letter
     int used[5] = {0}; // false if not checked, true if checked
@@ -33,28 +49,26 @@ void evaluateGuess(const char answer[], const char guess[]) {
         } else {
             states[i] = INCORRECT;
         }
+    }
 
     // mark yellows
-    for (int i = 0, i < 5; i++) {
+    for (int i = 0; i < 5; i++) {
         if (states[i] == SUCCESS) {
             continue;
         }
 
+        for (int j = 0; j < 5; j++) {
+            if (!used[j] && guess[i] == answer[j]) {
+                states[i] = MISPLACED;
+                used[j] = 1;
+                break;
+            }
+        }
     }
-    }
-}
 
-void printLetter(char letter, LetterState state) {
-    switch (state) {
-        case SUCCESS:
-            printf("%s%c%s", GREEN, letter, RESET);
-            break;
-        case MISPLACED:
-            printf("%s%c%s", YELLOW, letter, RESET);
-            break;
-        case INCORRECT:
-            printf("%s%c%s", GRAY, letter, RESET);
-            break;
+    // print each letter
+    for (int i = 0; i < 5; i++) {
+        printLetter(guess[i], states[i]);
     }
 }
 
@@ -89,11 +103,14 @@ int main(void) {
             }
             flushStdin();
             plrGuess[strcspn(plrGuess, "\n")] = 0;
+
+            if (strlen(plrGuess) > WORD_LENGTH) {
+            printf("Please make length atleast 5 letters.\n");
+            }
+
         } while (strlen(plrGuess) != WORD_LENGTH);
 
         evaluateGuess(WORD_ANSWER, plrGuess);
-        
-
-        
+        printf("\n");
     }
 }
