@@ -7,8 +7,6 @@ My first project in C. Feel free to open issues for bug reports or pull requests
 
 ## Installation
 
-To compile:
-
 Download or clone the repository.
 ```
 gcc -o wordle ./wordle.c
