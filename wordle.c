@@ -6,6 +6,7 @@
 #define GREEN "\x1b[32m"
 #define YELLOW "\x1b[33m"
 #define GRAY "\x1b[90m"
+#define RED "\x1b[31m"
 
 typedef enum {
     SUCCESS,
@@ -34,7 +35,7 @@ void printLetter(char letter, LetterState state) {
     }
 }
 
-// Logic
+// Logic Functions //
 
 void evaluateGuess(const char answer[], const char guess[]) {
     LetterState states[5]; // state for each letter
@@ -92,7 +93,7 @@ int main(void) {
     const int MAX_GUESSES = 6;
     int guessCount = 0;
 
-    while (guessCount < MAX_GUESSES) {
+    while (guessCount < MAX_GUESSES && strcmp(plrGuess, WORD_ANSWER) != 0) {
         guessCount++;
 
         // input loop until its atleast 5 chars
@@ -101,7 +102,7 @@ int main(void) {
                 printf("\nInput error or EOF.");
                 break;
             }
-
+            
             // if \n is not the buff that means stdin could have remaining chars
             if (strchr(plrGuess, '\n') == NULL) {
                 flushStdin();
@@ -120,5 +121,11 @@ int main(void) {
         printf(" Guess %i\n", guessCount);
     }
 
-
+    // ending text depends on if the player got the word
+    if (strcmp(plrGuess, WORD_ANSWER) == 0) {
+        printf("%sCongrats! You have won in %i guesses.%s\n", GREEN, guessCount, RESET);
+    }
+    else {
+        printf("%sYou have lost! The word was %s.%s\n", RED, WORD_ANSWER, RESET);
+    }
 }
