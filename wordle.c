@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 
 // Colored Text
 #define RESET "\x1b[0m"
@@ -74,7 +75,8 @@ void evaluateGuess(const char answer[], const char guess[]) {
 }
 
 void setup(void) {
-    printf("You will have 6 letters to guess the correct word.\n");
+    printf("---------------- WORDLE ------------------\n");
+    printf("You will have 6 attempts to guess the correct 5 letter word.\n");
     printf("After every guess, each letter will be either green, yellow, gray.\n");
     printf("Green means correct letter and correct place.\n");
     printf("Yellow means correct letter and wrong place.\n");
@@ -89,6 +91,7 @@ int main(void) {
 
     // buffer to hold player input
     char plrGuess[WORD_LENGTH + 1];
+    plrGuess[0] = '\0';
 
     const int MAX_GUESSES = 6;
     int guessCount = 0;
@@ -109,13 +112,18 @@ int main(void) {
             }
 
             // make newline into null to so strlen returns correct size
-            plrGuess[strcspn(plrGuess, "\n")] = 0;
+            plrGuess[strcspn(plrGuess, "\n")] = '\0';
 
             if (strlen(plrGuess) < WORD_LENGTH) {
-            printf("Input must be atleast 5 letters.\n");
+            printf("Input must be 5 letters.\n");
             }
 
         } while (strlen(plrGuess) != WORD_LENGTH);
+
+        // normalise input to lowercase
+        for (int i = 0; plrGuess[i]; i++) {
+            plrGuess[i] = tolower(plrGuess[i]);
+        }
 
         evaluateGuess(WORD_ANSWER, plrGuess);        
         printf(" Guess %i\n", guessCount);
