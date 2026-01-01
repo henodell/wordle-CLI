@@ -95,22 +95,30 @@ int main(void) {
     while (guessCount < MAX_GUESSES) {
         guessCount++;
 
-        // constantly ask for player input until its atleast 5 chars
+        // input loop until its atleast 5 chars
         do {
             if (fgets(plrGuess, sizeof(plrGuess), stdin) == NULL) {
                 printf("\nInput error or EOF.");
                 break;
             }
-            flushStdin();
+
+            // if \n is not the buff that means stdin could have remaining chars
+            if (strchr(plrGuess, '\n') == NULL) {
+                flushStdin();
+            }
+
+            // make newline into null to so strlen returns correct size
             plrGuess[strcspn(plrGuess, "\n")] = 0;
 
-            if (strlen(plrGuess) > WORD_LENGTH) {
-            printf("Please make length atleast 5 letters.\n");
+            if (strlen(plrGuess) < WORD_LENGTH) {
+            printf("Input must be atleast 5 letters.\n");
             }
 
         } while (strlen(plrGuess) != WORD_LENGTH);
 
-        evaluateGuess(WORD_ANSWER, plrGuess);
-        printf("\n");
+        evaluateGuess(WORD_ANSWER, plrGuess);        
+        printf(" Guess %i\n", guessCount);
     }
+
+
 }
